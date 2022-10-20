@@ -1,9 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
-
+import "./App.css";
+import Form from "./components/Form";
 function App() {
+  const sendDataRequest = async (parameters) => {
+    try {
+      const response = await fetch("http://localhost:3001/api/meals/");
+      
+      if (!response.ok) {
+        throw new Error("Something went wrong!");
+      }
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const submitRequest = (parameters) => {
+    sendDataRequest();
+  };
   return (
-    <div className="App">
+    <>
+      <header className="main-title">
+        <h1>Meta Photo</h1>
+      </header>
+      <section>
+        <Form onSubmitRequest={submitRequest}></Form>
+      </section>
+
+      {/* <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
@@ -18,7 +42,8 @@ function App() {
           Learn React
         </a>
       </header>
-    </div>
+    </div> */}
+    </>
   );
 }
 
