@@ -1,23 +1,41 @@
+import { useState } from "react";
 import "./App.css";
 import Form from "./components/Form";
+import Card from "./components/Card";
 function App() {
+  const [photoValues, setPhotoValues] = useState([]);
+  const [isLoading, setLoading] = useState(false);
+  const [isError, setError] = useState(null);
+
   const sendDataRequest = async (parameters) => {
+    setLoading(true);
     try {
-      const response = await fetch("http://localhost:3001/api/meals/");
-      
+      console.log(
+        "http://localhost:3001/api/photos?" + new URLSearchParams(parameters)
+      );
+      const response = await fetch(
+        "http://localhost:3001/api/photos?" + new URLSearchParams(parameters)
+      );
+
       if (!response.ok) {
         throw new Error("Something went wrong!");
       }
       const data = await response.json();
+      setPhotoValues(data);
       console.log(data);
     } catch (error) {
-      console.log(error.message);
+      setError(error.message);
     }
+    setLoading(false);
   };
 
   const submitRequest = (parameters) => {
-    sendDataRequest();
+    sendDataRequest(parameters);
   };
+
+  const cardPhotos = photoValues.map((item) => (
+    <Card key={item.id} photo={item}></Card>
+  ));
   return (
     <>
       <header className="main-title">
@@ -26,23 +44,26 @@ function App() {
       <section>
         <Form onSubmitRequest={submitRequest}></Form>
       </section>
-
-      {/* <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div> */}
+      <section className="container">
+        {!isLoading && photoValues.length > 0 && !isError && cardPhotos}
+      </section>
+      <section>
+        {!isLoading && photoValues.length === 0 && !isError && (
+          <h2>
+            <p>Found no Photos :(</p>
+          </h2>
+        )}
+        {isLoading && (
+          <h2>
+            <p>is Loading...!</p>
+          </h2>
+        )}
+        {!isLoading && isError && (
+          <h2>
+            <p>{isError}</p>
+          </h2>
+        )}
+      </section>
     </>
   );
 }

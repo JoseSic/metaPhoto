@@ -38,13 +38,13 @@ const Form = (props) => {
       parameters.title = photoTitleValue;
     }
     if (userEmailValue !== "") {
-      parameters["album.user.email"] = photoTitleValue;
+      parameters["album.user.email"] = userEmailValue;
     }
     if (albumTitleValue !== "") {
-      parameters["album.title"] = photoTitleValue;
+      parameters["album.title"] = albumTitleValue;
     }
     if (offsetValue !== "") {
-      parameters.offset = offsetValue;
+      parameters.offset = +offsetValue-1;
     }
     if (limitValue !== "") {
       parameters.limit = limitValue;
