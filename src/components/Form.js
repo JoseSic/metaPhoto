@@ -88,7 +88,7 @@ const Form = (props) => {
               onChange={userEmailChangeHandler}
             ></input>
           </div>
-          <div className={classes["form-control"]}>
+          {/* <div className={classes["form-control"]}>
             <label htmlFor="offset">Offset</label>
             <input
               id="offset"
@@ -113,7 +113,7 @@ const Form = (props) => {
               value={limitValue}
               onChange={limitChangeHandler}
             ></input>
-          </div>
+          </div> */}
           <div className={classes["form-actions"]}>
             <button>Search</button>
           </div>

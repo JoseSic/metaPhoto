@@ -12,11 +12,6 @@ code {
     monospace;
 }
 
-.main-title {
-  margin-left: 40px;
-  font-weight: bold;
-  display: block;
-}
 p {
   margin: 1rem auto;
   width: 90%;
