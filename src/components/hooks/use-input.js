@@ -11,10 +11,15 @@ const UseInput = () => {
     setEnteredValue("");
   };
 
+  const setValues = (value) => {
+    setEnteredValue(value);
+  };
+
   return {
     value: enteredValue,
     valueChangeHandler,
     resetValues,
+    setValues,
   };
 };
 

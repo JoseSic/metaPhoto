@@ -1,12 +1,20 @@
 import { useState } from "react";
 import Form from "./Form";
-import Card from "./Card";
 import classes from "./MetaPhoto.module.css";
+import useInput from "./hooks/use-input";
+import Card from "./Card";
+
 function MetaPhoto() {
   const [photoValues, setPhotoValues] = useState([]);
   const [parametersValues, setParameters] = useState();
   const [isLoading, setLoading] = useState(false);
   const [isError, setError] = useState(null);
+  const limitDefaultValue = "25";
+  const {
+    value: limitValue,
+    valueChangeHandler: limitChangeHandler,
+    setValues: setLimitValues,
+  } = useInput();
 
   const sendDataRequest = async (parameters) => {
     setLoading(true);
@@ -23,7 +31,7 @@ function MetaPhoto() {
       }
       const data = await response.json();
       setPhotoValues(data);
-      setParameters(parameters)
+      setParameters(parameters);
       console.log(data);
     } catch (error) {
       setError(error.message);
@@ -32,13 +40,16 @@ function MetaPhoto() {
   };
 
   const submitRequest = (parameters) => {
+    setLimitValues(limitDefaultValue);
     sendDataRequest(parameters);
   };
 
   const dummy = (event) => {
-
     if (event.key === "Enter") {
-        
+      console.log(limitValue);
+      const parameters = { ...parametersValues, limit: limitValue };
+      console.log(parameters);
+      sendDataRequest(parameters);
     }
   };
 
@@ -54,6 +65,8 @@ function MetaPhoto() {
           min="1"
           max="500"
           step="1"
+          value={limitValue}
+          onChange={limitChangeHandler}
           onKeyDown={dummy}
         ></input>
         <button>Previous</button>

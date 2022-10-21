@@ -4,22 +4,17 @@ const Form = (props) => {
   const {
     value: photoTitleValue,
     valueChangeHandler: photoTitleChangeHandler,
-    resetValues: resetPhotoTitleValues,
   } = useInput();
 
-  const {
-    value: userEmailValue,
-    valueChangeHandler: userEmailChangeHandler,
-    resetValues: resetUserEmailValues,
-  } = useInput();
+  const { value: userEmailValue, valueChangeHandler: userEmailChangeHandler } =
+    useInput();
 
   const {
     value: albumTitleValue,
     valueChangeHandler: albumTitleChangeHandler,
-    resetValues: resetAlbumTitleValues,
   } = useInput();
 
-  const {
+  /*   const {
     value: offsetValue,
     valueChangeHandler: offsetChangeHandler,
     resetValues: resetOffsetValues,
@@ -29,7 +24,7 @@ const Form = (props) => {
     value: limitValue,
     valueChangeHandler: limitChangeHandler,
     resetValues: resetLimitValues,
-  } = useInput();
+  } = useInput(); */
 
   const submitHandler = (event) => {
     event.preventDefault();
@@ -43,12 +38,12 @@ const Form = (props) => {
     if (albumTitleValue !== "") {
       parameters["album.title"] = albumTitleValue;
     }
-    if (offsetValue !== "") {
+    /*  if (offsetValue !== "") {
       parameters.offset = +offsetValue-1;
     }
     if (limitValue !== "") {
       parameters.limit = limitValue;
-    }
+    } */
     props.onSubmitRequest(parameters);
     console.log(parameters);
   };
