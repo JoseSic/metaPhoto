@@ -5,23 +5,23 @@ import useInput from "./hooks/use-input";
 import Card from "./Card";
 
 function MetaPhoto() {
-  const [photoValues, setPhotoValues] = useState([]);
+  const [photoValues, setPhotoValues] = useState({
+    pages: 0,
+    offset: 0,
+    limit: 0,
+    currentPage: 0,
+    photos: [],
+  });
   const [parametersValues, setParameters] = useState();
   const [isLoading, setLoading] = useState(false);
   const [isError, setError] = useState(null);
   const limitDefaultValue = "25";
-  const {
-    value: limitValue,
-    valueChangeHandler: limitChangeHandler,
-    setValues: setLimitValues,
-  } = useInput();
+  const [limitValue, setLimitValue] = useState(0);
 
   const sendDataRequest = async (parameters) => {
     setLoading(true);
+    setError(null);
     try {
-      console.log(
-        "http://localhost:3001/api/photos?" + new URLSearchParams(parameters)
-      );
       const response = await fetch(
         "http://localhost:3001/api/photos?" + new URLSearchParams(parameters)
       );
@@ -31,8 +31,6 @@ function MetaPhoto() {
       }
       const data = await response.json();
       setPhotoValues(data);
-      setParameters(parameters);
-      console.log(data);
     } catch (error) {
       setError(error.message);
     }
@@ -40,14 +38,46 @@ function MetaPhoto() {
   };
 
   const submitRequest = (parameters) => {
-    setLimitValues(limitDefaultValue);
+    setLimitValue(limitDefaultValue);
+    setParameters(parameters);
     sendDataRequest(parameters);
   };
 
   const dummy = (event) => {
+    console.log(event.key);
     if (event.key === "Enter") {
-      console.log(limitValue);
-      const parameters = { ...parametersValues, limit: limitValue };
+      event.preventDefault();
+      console.log(event.target.value, "value");
+      const limitValueInput = event.target.value;
+      if (limitValueInput !== "" && limitValueInput !== "0") {
+        const parameters = { ...parametersValues, limit: limitValueInput };
+        setLimitValue(limitValueInput);
+        sendDataRequest(parameters);
+      }
+    }
+  };
+
+  const nextPage = (event) => {
+    if (photoValues.currentPage < photoValues.pages) {
+      const nextOffset = photoValues.offset + +limitValue;
+      const parameters = {
+        ...parametersValues,
+        limit: limitValue,
+        offset: nextOffset,
+      };
+      console.log(parameters);
+      sendDataRequest(parameters);
+    }
+  };
+
+  const previousPage = (event) => {
+    if (photoValues.currentPage > 1) {
+      const nextOffset = photoValues.offset - +limitValue;
+      const parameters = {
+        ...parametersValues,
+        limit: limitValue,
+        offset: nextOffset,
+      };
       console.log(parameters);
       sendDataRequest(parameters);
     }
@@ -65,15 +95,22 @@ function MetaPhoto() {
           min="1"
           max="500"
           step="1"
-          value={limitValue}
-          onChange={limitChangeHandler}
+          defaultValue={limitValue}
           onKeyDown={dummy}
         ></input>
-        <button>Previous</button>
-        <button>Next</button>
+        <button type="button" onClick={previousPage}>
+          Previous
+        </button>
+        <button type="button" onClick={nextPage}>
+          Next
+        </button>
+        <span> Page: </span>
+        <span>
+          {photoValues.currentPage} / {photoValues.pages}
+        </span>
       </div>
       <div className={classes.container}>
-        {photoValues.map((item) => (
+        {photoValues.photos.map((item) => (
           <Card key={item.id} photo={item}></Card>
         ))}
       </div>
@@ -88,10 +125,10 @@ function MetaPhoto() {
         <Form onSubmitRequest={submitRequest}></Form>
       </section>
       <section>
-        {!isLoading && photoValues.length > 0 && !isError && cardPhotos}
+        {!isLoading && photoValues.photos.length > 0 && !isError && cardPhotos}
       </section>
       <section>
-        {!isLoading && photoValues.length === 0 && !isError && (
+        {!isLoading && photoValues.photos.length === 0 && !isError && (
           <h2>
             <p>Found no Photos :(</p>
           </h2>

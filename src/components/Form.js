@@ -14,18 +14,6 @@ const Form = (props) => {
     valueChangeHandler: albumTitleChangeHandler,
   } = useInput();
 
-  /*   const {
-    value: offsetValue,
-    valueChangeHandler: offsetChangeHandler,
-    resetValues: resetOffsetValues,
-  } = useInput();
-
-  const {
-    value: limitValue,
-    valueChangeHandler: limitChangeHandler,
-    resetValues: resetLimitValues,
-  } = useInput(); */
-
   const submitHandler = (event) => {
     event.preventDefault();
     const parameters = {};
@@ -38,14 +26,8 @@ const Form = (props) => {
     if (albumTitleValue !== "") {
       parameters["album.title"] = albumTitleValue;
     }
-    /*  if (offsetValue !== "") {
-      parameters.offset = +offsetValue-1;
-    }
-    if (limitValue !== "") {
-      parameters.limit = limitValue;
-    } */
+    console.log(parameters, "form");
     props.onSubmitRequest(parameters);
-    console.log(parameters);
   };
   return (
     <div className={classes["data-form"]}>
@@ -83,32 +65,6 @@ const Form = (props) => {
               onChange={userEmailChangeHandler}
             ></input>
           </div>
-          {/* <div className={classes["form-control"]}>
-            <label htmlFor="offset">Offset</label>
-            <input
-              id="offset"
-              type="number"
-              min="1"
-              max="500"
-              step="1"
-              value={offsetValue}
-              onChange={offsetChangeHandler}
-            ></input>
-          </div>
-        </div>
-        <div className={classes["control-group"]}>
-          <div className={classes["form-control"]}>
-            <label htmlFor="limit">Limit</label>
-            <input
-              id="limit"
-              type="number"
-              min="1"
-              max="500"
-              step="1"
-              value={limitValue}
-              onChange={limitChangeHandler}
-            ></input>
-          </div> */}
           <div className={classes["form-actions"]}>
             <button>Search</button>
           </div>
