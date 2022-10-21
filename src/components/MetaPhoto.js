@@ -1,10 +1,16 @@
 import { useState, useEffect } from "react";
 import Form from "./Form";
 import classes from "./MetaPhoto.module.css";
-import useInput from "./hooks/use-input";
 import Card from "./Card";
 
 function MetaPhoto() {
+  const [parametersValues, setParameters] = useState();
+  const [isLoading, setLoading] = useState(false);
+  const [isError, setError] = useState(null);
+  const limitDefaultValue = "25";
+  const [limitValue, setLimitValue] = useState("25");
+  const [inputLimitValue, setInputLimitValue] = useState("25");
+  const uriApi = "http://localhost:3001/api/photos?";
   const [photoValues, setPhotoValues] = useState({
     pages: 0,
     offset: 0,
@@ -12,20 +18,12 @@ function MetaPhoto() {
     currentPage: 0,
     photos: [],
   });
-  const [parametersValues, setParameters] = useState();
-  const [isLoading, setLoading] = useState(false);
-  const [isError, setError] = useState(null);
-  const limitDefaultValue = "25";
-  const [limitValue, setLimitValue] = useState("");
-  const [inputLimitValue, setInputLimitValue] = useState("");
 
   const sendDataRequest = async (parameters) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(
-        "http://localhost:3001/api/photos?" + new URLSearchParams(parameters)
-      );
+      const response = await fetch(uriApi + new URLSearchParams(parameters));
 
       if (!response.ok) {
         throw new Error("Something went wrong!");
@@ -39,7 +37,6 @@ function MetaPhoto() {
   };
   useEffect(() => {
     sendDataRequest("");
-    setInputLimitValue(limitDefaultValue);
   }, []);
 
   const submitRequest = (parameters) => {
@@ -53,10 +50,8 @@ function MetaPhoto() {
     setInputLimitValue(event.target.value);
   };
 
-  const dummy = (event) => {
-    console.log(event.key);
+  const limitKeyDown = (event) => {
     if (event.key === "Enter") {
-      console.log(event.target.value, "value");
       const limitValueInput = event.target.value;
       if (
         limitValueInput !== "" &&
@@ -70,31 +65,28 @@ function MetaPhoto() {
     }
   };
 
-  const nextPage = (event) => {
+  const newPage = (nextOffset) => {
+    const parameters = {
+      ...parametersValues,
+      limit: limitValue,
+      offset: nextOffset,
+    };
+    setInputLimitValue(limitValue);
+    console.log(parameters);
+    sendDataRequest(parameters);
+  };
+
+  const nextPage = () => {
     if (photoValues.currentPage < photoValues.pages) {
       const nextOffset = photoValues.offset + +limitValue;
-      const parameters = {
-        ...parametersValues,
-        limit: limitValue,
-        offset: nextOffset,
-      };
-      console.log(parameters);
-      sendDataRequest(parameters);
-      setInputLimitValue(limitValue);
+      newPage(nextOffset);
     }
   };
 
-  const previousPage = (event) => {
+  const previousPage = () => {
     if (photoValues.currentPage > 1) {
       const nextOffset = photoValues.offset - +limitValue;
-      const parameters = {
-        ...parametersValues,
-        limit: limitValue,
-        offset: nextOffset,
-      };
-      console.log(parameters);
-      sendDataRequest(parameters);
-      setInputLimitValue(limitValue);
+      newPage(nextOffset);
     }
   };
 
@@ -107,6 +99,36 @@ function MetaPhoto() {
       </div>
     </>
   );
+
+  const dataActions = (
+    <>
+      <div className={classes["form-controlMP"]}>
+        <label htmlFor="limit">Limit: </label>
+        <input
+          id="limit"
+          type="number"
+          min="1"
+          max="500"
+          step="1"
+          disabled={photoValues.photos.length <= 0}
+          value={inputLimitValue}
+          onChange={onchangeLimit}
+          onKeyDown={limitKeyDown}
+        ></input>
+        <button type="button" onClick={previousPage}>
+          Previous
+        </button>
+        <button type="button" onClick={nextPage}>
+          Next
+        </button>
+        <span> Page: </span>
+        <span>
+          {photoValues.currentPage} / {photoValues.pages}
+        </span>
+      </div>
+    </>
+  );
+
   return (
     <>
       <header className={classes["main-title"]}>
@@ -116,32 +138,7 @@ function MetaPhoto() {
         <Form onSubmitRequest={submitRequest}></Form>
       </section>
       <section>
-        <div
-          className={`${classes["form-actionsMP"]} ${classes["form-controlMP"]}`}
-        >
-          <label htmlFor="limit">Limit: </label>
-          <input
-            id="limit"
-            type="number"
-            min="1"
-            max="500"
-            step="1"
-            disabled={photoValues.photos.length <= 0}
-            value={inputLimitValue}
-            onChange={onchangeLimit}
-            onKeyDown={dummy}
-          ></input>
-          <button type="button" onClick={previousPage}>
-            Previous
-          </button>
-          <button type="button" onClick={nextPage}>
-            Next
-          </button>
-          <span> Page: </span>
-          <span>
-            {photoValues.currentPage} / {photoValues.pages}
-          </span>
-        </div>
+        {dataActions}
         {!isLoading && photoValues.photos.length > 0 && !isError && cardPhotos}
         {!isLoading && photoValues.photos.length === 0 && !isError && (
           <h2>
