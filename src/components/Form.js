@@ -4,15 +4,15 @@ const Form = (props) => {
   const {
     value: photoTitleValue,
     valueChangeHandler: photoTitleChangeHandler,
-  } = useInput();
+  } = useInput("");
 
   const { value: userEmailValue, valueChangeHandler: userEmailChangeHandler } =
-    useInput();
+    useInput("");
 
   const {
     value: albumTitleValue,
     valueChangeHandler: albumTitleChangeHandler,
-  } = useInput();
+  } = useInput("");
 
   const submitHandler = (event) => {
     event.preventDefault();
