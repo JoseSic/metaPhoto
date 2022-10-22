@@ -7,10 +7,12 @@
   cursor: default;
   width: 20rem;
   height: 30rem;
+  transition: all 400ms ease;
 }
 
 .card:hover {
   box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.2);
+  transform: translate(3%);
 }
 
 .boxFigure {
@@ -27,17 +29,17 @@
   height: 150px;
 }
 
-.summary{
-    margin: 15px;
+.summary {
+  margin: 15px;
 }
 
-.summary span{
-    font-weight: bold;
+.summary span {
+  font-weight: bold;
 }
 
-.summary-data{
-    display: flex;
+.summary-data {
+  display: flex;
 }
-.content{
-    padding-left: 15px;
+.content {
+  padding-left: 15px;
 }
