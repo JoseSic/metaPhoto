@@ -40,8 +40,10 @@ function MetaPhoto() {
   };
 
   useEffect(() => {
+    /*  setLoading(true);
+    setError(null);
+    setTimeout(() => sendDataRequest(""), 5000); */
     sendDataRequest("");
-    console.log("use effect");
   }, []);
 
   const submitRequest = (parameters) => {
@@ -55,6 +57,8 @@ function MetaPhoto() {
         <Form onSubmitRequest={submitRequest}></Form>
       </section>
       <section>
+        {isLoading && <p>is Loading...!</p>}
+        {!isLoading && isError && <p>{isError}</p>}
         {!isLoading && enteredData.photos.length > 0 && !isError && (
           <PhotoGrid
             enteredData={enteredData}
@@ -63,19 +67,7 @@ function MetaPhoto() {
           />
         )}
         {!isLoading && enteredData.photos.length === 0 && !isError && (
-          <h2>
-            <p>Found no Photos :(</p>
-          </h2>
-        )}
-        {isLoading && (
-          <h2>
-            <p>is Loading...!</p>
-          </h2>
-        )}
-        {!isLoading && isError && (
-          <h2>
-            <p>{isError}</p>
-          </h2>
+          <p>Found no Photos</p>
         )}
       </section>
     </>

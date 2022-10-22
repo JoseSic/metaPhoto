@@ -7,14 +7,9 @@ const UseInput = (initialValue) => {
     setEnteredValue(event.target.value);
   };
 
-  const setValues = (value) => {
-    setEnteredValue(value);
-  };
-
   return {
     value: enteredValue,
     valueChangeHandler,
-    setValues,
   };
 };
 

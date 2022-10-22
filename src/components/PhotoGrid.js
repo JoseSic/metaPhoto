@@ -1,12 +1,12 @@
 import Card from "./Card";
 import useInput from "./hooks/use-input";
 import classes from "./PhotoGrid.module.css";
-
+import Button from "./UI/Button";
+import Input from "./UI/Input";
 const PhotoGrid = (props) => {
   const {
     value: inputLimitValue,
     valueChangeHandler: inputChangeHandler,
-    setValues: setInputLimitValue,
   } = useInput(props.enteredData.limit);
   console.log("PhotoGrid", inputLimitValue);
 
@@ -23,7 +23,7 @@ const PhotoGrid = (props) => {
           ...props.parametersValues,
           limit: limitValueInput,
         };
-        setInputLimitValue(limitValueInput);
+        //setInputLimitValue(limitValueInput);
         props.onSendDataRequest(parameters);
       }
     }
@@ -35,8 +35,7 @@ const PhotoGrid = (props) => {
       limit: props.enteredData.limit,
       offset: nextOffset,
     };
-    setInputLimitValue(props.enteredData.limit);
-    console.log(+props.enteredData.limit);
+    //setInputLimitValue(props.enteredData.limit);
     props.onSendDataRequest(parameters);
   };
 
@@ -56,25 +55,28 @@ const PhotoGrid = (props) => {
 
   const dataActions = (
     <>
-      <div className={classes["form-controlMP"]}>
-        <label htmlFor="limit">Limit: </label>
-        <input
-          id="limit"
-          type="number"
-          min="1"
-          max="500"
-          step="1"
-          disabled={props.enteredData.photos.length <= 0}
-          value={inputLimitValue}
-          onChange={inputChangeHandler}
-          onKeyDown={limitKeyDown}
-        ></input>
-        <button type="button" onClick={previousPage}>
+      <div className={classes["form-control"]}>
+        <Input
+          input={{
+            id: "limit",
+            type: "number",
+            min: "1",
+            max: "500",
+            step: "1",
+            disabled: props.enteredData.photos.length <= 0,
+            value: inputLimitValue,
+            onChange: inputChangeHandler,
+            onKeyDown: limitKeyDown,
+          }}
+        >
+          Limit:{" "}
+        </Input>
+        <Button type="button" onClick={previousPage}>
           Previous
-        </button>
-        <button type="button" onClick={nextPage}>
+        </Button>
+        <Button type="button" onClick={nextPage}>
           Next
-        </button>
+        </Button>
         <span>
           Page: {props.enteredData.currentPage} / {props.enteredData.pages}
         </span>
@@ -83,7 +85,6 @@ const PhotoGrid = (props) => {
   );
   const cardPhotos = (
     <>
-      {dataActions}
       <div className={classes.container}>
         {props.enteredData.photos.map((item) => (
           <Card key={item.id} photo={item}></Card>
@@ -92,7 +93,11 @@ const PhotoGrid = (props) => {
     </>
   );
 
-  return <>{cardPhotos}</>;
+  return (
+    <>
+      {dataActions} {cardPhotos}
+    </>
+  );
 };
 
 export default PhotoGrid;

@@ -1,5 +1,7 @@
 import classes from "./Form.module.css";
 import useInput from "./hooks/use-input";
+import Button from "./UI/Button";
+import Input from "./UI/Input";
 const Form = (props) => {
   const {
     value: photoTitleValue,
@@ -26,9 +28,10 @@ const Form = (props) => {
     if (albumTitleValue !== "") {
       parameters["album.title"] = albumTitleValue;
     }
-    console.log(parameters, "form");
+
     props.onSubmitRequest(parameters);
   };
+
   return (
     <div className={classes["data-form"]}>
       <div>
@@ -37,36 +40,45 @@ const Form = (props) => {
       <form onSubmit={submitHandler}>
         <div className={classes["control-group"]}>
           <div className={classes["form-control"]}>
-            <label htmlFor="photoTitle">Photo Title</label>
-            <input
-              id="photoTitle"
-              type="text"
-              value={photoTitleValue}
-              onChange={photoTitleChangeHandler}
-            ></input>
+            <Input
+              input={{
+                id: "photoTitle",
+                type: "text",
+                value: photoTitleValue,
+                onChange: photoTitleChangeHandler,
+              }}
+            >
+              Photo Title
+            </Input>
           </div>
           <div className={classes["form-control"]}>
-            <label htmlFor="albumTitle">Album Title</label>
-            <input
-              id="albumTitle"
-              type="text"
-              value={albumTitleValue}
-              onChange={albumTitleChangeHandler}
-            ></input>
+            <Input
+              input={{
+                id: "albumTitle",
+                type: "text",
+                value: albumTitleValue,
+                onChange: albumTitleChangeHandler,
+              }}
+            >
+              Album Title
+            </Input>
           </div>
         </div>
         <div className={classes["control-group"]}>
           <div className={classes["form-control"]}>
-            <label htmlFor="userEmail">User Email</label>
-            <input
-              id="userEmail"
-              type="text"
-              value={userEmailValue}
-              onChange={userEmailChangeHandler}
-            ></input>
+            <Input
+              input={{
+                id: "userEmail",
+                type: "text",
+                value: userEmailValue,
+                onChange: userEmailChangeHandler,
+              }}
+            >
+              User Email
+            </Input>
           </div>
           <div className={classes["form-actions"]}>
-            <button>Search</button>
+            <Button type="onSubmit">Search</Button>
           </div>
         </div>
       </form>
