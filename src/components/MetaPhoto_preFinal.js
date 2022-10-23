@@ -1,10 +1,11 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import Form from "./Form";
 import PhotoGrid from "./PhotoGrid";
-import useHttp from "../components/hooks/use-http";
 
 function MetaPhoto() {
   const [parametersValues, setParameters] = useState();
+  const [isLoading, setLoading] = useState(false);
+  const [isError, setError] = useState(null);
   const [enteredData, setData] = useState({
     pages: 0,
     offset: 0,
@@ -14,31 +15,39 @@ function MetaPhoto() {
   });
   const apiUri = "http://localhost:3001/api/photos?";
 
-  const { isLoading, isError, sendDataRequest } = useHttp();
+  const sendDataRequest = async (parameters) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(apiUri + new URLSearchParams(parameters));
 
-  const setDataHandler = useCallback((dataObject) => {
-    const newObject = {
-      pages: dataObject.pages,
-      offset: dataObject.offset,
-      limit: dataObject.limit,
-      currentPage: dataObject.currentPage,
-      photos: [...dataObject.photos],
-    };
-    setData(newObject);
-  }, []);
+      if (!response.ok) {
+        throw new Error("Request failed!");
+      }
+      const data = await response.json();
+      /*    const newDataObject ={
+        pages: data.pages,
+        offset: data.offset,
+        limit: data.limit,
+        currentPage: data.currentPage,
+        photos: [...data.photos],
+      } */
+      setData(data);
+    } catch (error) {
+      setError(error.message);
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
-    sendDataRequest(apiUri, "", setDataHandler);
-  }, [sendDataRequest, setDataHandler]);
+    sendDataRequest("");
+  }, []);
 
   const submitRequest = (parameters) => {
     setParameters(parameters);
-    sendDataRequest(apiUri, parameters, setDataHandler);
+    sendDataRequest(parameters);
   };
 
-  const submitNextPageRequest = (parameters) => {
-    sendDataRequest(apiUri, parameters, setDataHandler);
-  };
   return (
     <>
       <section>
@@ -51,7 +60,7 @@ function MetaPhoto() {
           <PhotoGrid
             enteredData={enteredData}
             parametersValues={parametersValues}
-            onSendDataRequest={submitNextPageRequest}
+            onSendDataRequest={sendDataRequest}
           />
         )}
         {!isLoading && enteredData.photos.length === 0 && !isError && (

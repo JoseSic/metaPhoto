@@ -1,7 +1,6 @@
 import "./App.css";
 import MetaPhoto from "./components/MetaPhoto.js";
 function App() {
-  console.log("renderApp");
   return (
     <>
       <header className="main-title ">

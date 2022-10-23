@@ -4,8 +4,11 @@ import classes from "./PhotoGrid.module.css";
 import Button from "./UI/Button";
 import Input from "./UI/Input";
 const PhotoGrid = (props) => {
-  const { value: inputLimitValue, valueChangeHandler: inputChangeHandler } =
-    useInput(props.enteredData.limit);
+  const {
+    value: inputLimitValue,
+    valueChangeHandler: inputChangeHandler,
+  } = useInput(props.enteredData.limit);
+  console.log("PhotoGrid", inputLimitValue);
 
   const limitKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -15,6 +18,7 @@ const PhotoGrid = (props) => {
         dataLimitValue !== "0" &&
         props.enteredData.pages > 0
       ) {
+        console.log("enter", { ...props.parametersValues });
         const parameters = {
           ...props.parametersValues,
           limit: dataLimitValue,
