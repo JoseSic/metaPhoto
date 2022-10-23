@@ -13,16 +13,16 @@ function MetaPhoto() {
     currentPage: 0,
     photos: [],
   });
-  const uriApi = "http://localhost:3001/api/photos?";
+  const apiUri = "http://localhost:3001/api/photos?";
 
   const sendDataRequest = async (parameters) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(uriApi + new URLSearchParams(parameters));
+      const response = await fetch(apiUri + new URLSearchParams(parameters));
 
       if (!response.ok) {
-        throw new Error("Something went wrong!");
+        throw new Error("Request failed!");
       }
       const data = await response.json();
       /*    const newDataObject ={
@@ -40,9 +40,6 @@ function MetaPhoto() {
   };
 
   useEffect(() => {
-    /*  setLoading(true);
-    setError(null);
-    setTimeout(() => sendDataRequest(""), 5000); */
     sendDataRequest("");
   }, []);
 

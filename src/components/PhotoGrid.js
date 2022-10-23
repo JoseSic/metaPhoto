@@ -12,16 +12,16 @@ const PhotoGrid = (props) => {
 
   const limitKeyDown = (event) => {
     if (event.key === "Enter") {
-      const limitValueInput = event.target.value;
+      const dataLimitValue = event.target.value;
       if (
-        limitValueInput !== "" &&
-        limitValueInput !== "0" &&
+        dataLimitValue !== "" &&
+        dataLimitValue !== "0" &&
         props.enteredData.pages > 0
       ) {
         console.log("enter", { ...props.parametersValues });
         const parameters = {
           ...props.parametersValues,
-          limit: limitValueInput,
+          limit: dataLimitValue,
         };
         //setInputLimitValue(limitValueInput);
         props.onSendDataRequest(parameters);
